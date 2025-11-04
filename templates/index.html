@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contract Analyzer</title>
+    <style>
+      :root{
+        --bg: #f5f7fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --accent: #2b6cb0;
+        --border: #e6edf6;
+      }
+      *{box-sizing:border-box}
+      body{
+        font-family: Inter, 'Segoe UI', Roboto, Arial, sans-serif;
+        background: var(--bg);
+        color: #111827;
+        margin:0;
+        padding:32px 16px;
+        display:flex;
+        justify-content:center;
+        align-items:flex-start;
+        min-height:100vh;
+      }
+      .container{
+        width:100%;
+        max-width:900px;
+      }
+      header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+      h1{font-size:20px;margin:0}
+      p.lead{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+      .card{
+        background:var(--card);
+        border:1px solid var(--border);
+        border-radius:10px;
+        padding:20px;
+        box-shadow:0 6px 18px rgba(13,38,59,0.04);
+      }
+
+      form.upload{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+      .file-input{
+        flex:1 1 320px;
+        display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;border:1px dashed #dbe7f7;background:#fbfdff
+      }
+      input[type=file]{outline:none}
+      button.primary{
+        background:var(--accent);
+        color:#fff;border:0;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600
+      }
+      .muted{color:var(--muted);font-size:13px}
+
+      .result{margin-top:16px;display:grid;grid-template-columns:1fr;gap:12px}
+      .section{padding:14px;border-radius:8px;background:#fbfdff;border:1px solid var(--border)}
+      .section h3{margin:0 0 8px;font-size:14px}
+      ul{margin:0 0 0 18px;padding:0}
+      pre{white-space:pre-wrap;margin:0;font-family:inherit;font-size:13px}
+
+      .keywords{font-size:13px;color:#0f172a}
+
+      @media(min-width:720px){
+        .result{grid-template-columns:1fr 1fr}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div>
+          <h1>Contract Analyzer</h1>
+          <p class="lead">Upload a contract (.txt or .docx). The analyzer extracts parties, dates, amounts, obligations, and a short summary.</p>
+        </div>
+      </header>
+
+      <div class="card">
+        <form class="upload" method="post" enctype="multipart/form-data">
+          <label class="file-input">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden style="opacity:.9"><path d="M12 3v12" stroke="#2b6cb0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 7l4-4 4 4" stroke="#2b6cb0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span class="muted">Select a file or drag it here</span>
+            <input type="file" name="file" accept=".txt,.docx" required />
+          </label>
+
+          <div style="display:flex;gap:10px">
+            <button class="primary" type="submit">Analyze</button>
+          </div>
+        </form>
+
+        {% if error %}
+          <div style="margin-top:12px;color:#b91c1c;font-weight:600">{{ error }}</div>
+        {% endif %}
+
+        {% if result %}
+          <div class="result">
+            <div class="section">
+              <h3>Parties (guessed)</h3>
+              <ul>{% for p in result.parties %}<li>{{ p }}</li>{% endfor %}</ul>
+            </div>
+
+            <div class="section">
+              <h3>Dates</h3>
+              <ul>{% for d in result.dates_found %}<li>{{ d }}</li>{% endfor %}</ul>
+            </div>
+
+            <div class="section">
+              <h3>Money / Amounts</h3>
+              <ul>{% for m in result.money_values %}<li>{{ m }}</li>{% endfor %}</ul>
+            </div>
+
+            <div class="section">
+              <h3>Top keywords</h3>
+              <div class="keywords">{{ result.top_keywords | join(', ') }}</div>
+            </div>
+
+            <div class="section" style="grid-column:1 / -1">
+              <h3>Obligation sentences</h3>
+              <ul>{% for s in result.obligation_sentences %}<li><pre>{{ s }}</pre></li>{% endfor %}</ul>
+            </div>
+
+            <div class="section" style="grid-column:1 / -1">
+              <h3>Termination / Notice</h3>
+              <ul>{% for s in result.termination_sentences %}<li><pre>{{ s }}</pre></li>{% endfor %}</ul>
+            </div>
+
+            <div class="section" style="grid-column:1 / -1">
+              <h3>Short Summary</h3>
+              <pre>{{ result.short_summary }}</pre>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>

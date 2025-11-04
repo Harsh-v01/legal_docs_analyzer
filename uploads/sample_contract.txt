@@ -1,0 +1,7 @@
+THIS AGREEMENT is made on 1st January 2024 between Alpha Tech Solutions Pvt. Ltd. ("Provider") having its office at Pune and Beta Retail Ltd. ("Client").
+
+WHEREAS the Provider agrees to provide software services and the Client agrees to pay for such services.
+
+The Client shall pay Provider an amount of Rs. 5,00,000 within 30 days of invoice. Provider shall deliver the software milestone-wise.
+
+Either party may terminate this Agreement by giving thirty (30) days written notice for material breach. Upon termination, the Client shall pay for services performed up to the termination date.
